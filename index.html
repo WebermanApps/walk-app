@@ -53,7 +53,8 @@ ul{padding-left:20px;margin:0}li{margin-bottom:12px}li::marker{color:var(--mute)
 .wide{width:100%;margin-top:6px}
 .ck{margin:10px 0;font-weight:500}.ck+.check:not(.ck){margin-top:20px}.bring h2{font-size:24px;margin-bottom:10px}.bring li{margin-bottom:6px}
 .sum{font-size:15px;color:var(--mute);text-align:center;background:none;box-shadow:none;padding:10px 20px}.sum b{color:var(--ink)}
-</style></head><body>
+</style><script data-goatcounter="https://weberman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
 <header><h1 id="hd">Site Walk</h1><div id="pb"><i></i></div></header>
 <main id="m"></main>
 <div class="nav" id="nav"></div>
@@ -91,7 +92,8 @@ async function home(){S.pos=null;save();freeUrls();hd.textContent="Site Walk";
  prog(dn/tot);m.innerHTML=h;nav.innerHTML=`<button class="grn" onclick="finish()">Finish &amp; Share</button>`;window.scrollTo(0,0);}
 function before(){hd.textContent="Before You Go";prog(0);m.innerHTML=`<div class="card bring"><h2>What to Bring</h2><ul>${D.bring.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div><div class="card"><h2>Before You Go</h2><ul>${D.before.map(b=>`<li>${esc(b).replace("CONFIRM",'<span class="conf">CONFIRM</span>')}</li>`).join("")}</ul></div>`;
  nav.innerHTML=`<button class="sec" onclick="home()">Home</button><button class="pri" onclick="go(0,0)">Start Stop 1</button>`;window.scrollTo(0,0);}
-async function go(a,b){S.pos=[a,b];save();freeUrls();const s=D.stops[a],x=s.items[b],k=id(a,b),v=st(a,b);hd.textContent=`Stop ${a+1} of ${D.stops.length}`;const i=fidx(a,b);prog((i+1)/flow.length);
+async function gcev(p,t){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:p,title:t,event:true});}catch(e){}}
+function go(a,b){if(b===0)gcev("stop-"+(a+1)+"-started","Stop "+(a+1)+" started");S.pos=[a,b];save();freeUrls();const s=D.stops[a],x=s.items[b],k=id(a,b),v=st(a,b);hd.textContent=`Stop ${a+1} of ${D.stops.length}`;const i=fidx(a,b);prog((i+1)/flow.length);
  let h=(b==0&&s.note?`<div class="card">${esc(s.note)}${house(HP.stops[a+1])}</div>`:"")+(x.go?`<div class="card walk"><span class="ic" aria-hidden="true">↗</span><div><span class="lbl">Walk</span>${esc(x.go)}</div></div>`:"")+`<div class="card"><div class="cnt">Item ${x.n} of ${num.length} · ${b+1} of ${s.items.length} in this stop</div><h3>${x.n}. ${esc(x.name)}${x.conf?' <span class="conf">CONFIRM</span>':""}</h3>`;
  if(x.find)h+=`<p><span class="lbl">Where to Find It</span> ${esc(x.find)}</p>`;
  if(x.look)h+=`<p><span class="lbl">Looks Like</span> ${esc(x.look)}</p>`;
@@ -120,14 +122,14 @@ async function thumbs(k){const el=document.getElementById("th");if(!el)return;co
 function house(ps){return (ps||[]).map(p=>`<div class="sample"><img src="${p.src||(HP.pool||[])[p.ref]}" alt="${p.title?esc(p.title):"In This House"}" data-house="1"><div>${p.title?`<b>${esc(p.title)}</b>`:`<b>In This House</b>`}${p.note?"<br>"+esc(p.note):""}</div></div>`).join("");}
 function prog(f){const e=document.querySelector("#pb i");if(e)e.style.width=(100*f)+"%";}
 function step(i){if(i<0)return home();if(i>=flow.length)return done();const p=flow[i];if(p==="exit")return exitStep();go(p[0],p[1]);}
-function exitStep(){S.pos="exit";save();freeUrls();hd.textContent=E.sub;prog((XI+1)/flow.length);
+function exitStep(){gcev("exit-checklist","Exit checklist opened");S.pos="exit";save();freeUrls();hd.textContent=E.sub;prog((XI+1)/flow.length);
  let h=`<div class="card exit"><div class="kicker">${esc(E.kicker)}</div><h2>${esc(E.title)}</h2>${E.text.map(t=>`<p>${esc(t)}</p>`).join("")}`;
  E.checks.forEach((c,j)=>{h+=`<label class="check"><input type="checkbox" class="xc" data-j="${j}" ${S.ex.c[j]?"checked":""}> ${esc(c)}</label>`;});
  h+=`<label class="lbl" for="xn" style="margin-top:18px">Notes</label><textarea id="xn">${esc(S.ex.notes||"")}</textarea></div>`;m.innerHTML=h;window.scrollTo(0,0);
  m.querySelectorAll(".xc").forEach(el=>el.onchange=e=>{S.ex.c[+e.target.dataset.j]=e.target.checked;save();});
  document.getElementById("xn").oninput=e=>{S.ex.notes=e.target.value;save();};
  nav.innerHTML=`<button class="sec" onclick="step(${XI-1})">‹ Back</button><button class="sec" onclick="home()">Stops</button><button class="pri" onclick="step(${XI+1})">Stop ${EXA+2} ›</button>`;}
-function done(){S.pos=null;save();hd.textContent="When You're Done";prog(1);m.innerHTML=`<div class="card"><h2>When You're Done</h2><ul>${D.done.map(d=>`<li>${esc(d)}</li>`).join("")}</ul><p>Tap <b>Finish &amp; Share</b> to send everything (photos and notes) in one zip file.</p></div>`;
+function done(){gcev("walk-done","Walk done screen");S.pos=null;save();hd.textContent="When You're Done";prog(1);m.innerHTML=`<div class="card"><h2>When You're Done</h2><ul>${D.done.map(d=>`<li>${esc(d)}</li>`).join("")}</ul><p>Tap <b>Finish &amp; Share</b> to send everything (photos and notes) in one zip file.</p></div>`;
  nav.innerHTML=`<button class="sec" onclick="home()">Stops</button><button class="grn" onclick="finish()">Finish &amp; Share</button>`;window.scrollTo(0,0);}
 // zip (store, no compression)
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
@@ -151,7 +153,7 @@ async function buildZip(){const all=await allPhotos();const files=[];const k2=ne
  D.stops.forEach((s,a)=>{t+=`== ${s.title} ==\n`;s.items.forEach((x,b)=>{const v=st(a,b);t+=`${x.n}. ${x.name}${x.conf?" (CONFIRM)":""}\n   Done: ${v.done?"YES":"no"}\n   Photos: ${k2.get(id(a,b))||0}\n${(x.checks||[]).map((c,j)=>`   [${(v.checks||[])[j]?"x":" "}] ${c}\n`).join("")}${x.serial!==false?`   Serial: ${v.serial||"-"}\n`:""}${x.filt?`   Filter Size: ${v.filter||"-"}\n`:""}   Notes: ${v.notes||"-"}\n`;});t+="\n";
   if(a===EXA){t+=`== ${E.sub}: ${E.title} ==\n`;E.checks.forEach((c,j)=>{t+=`[${S.ex.c[j]?"x":" "}] ${c}\n`;});t+=`   Notes: ${S.ex.notes||"-"}\n\n`;}});
  files.unshift({name:"results.txt",data:new TextEncoder().encode(t)});return makeZip(files);}
-async function finish(){const btns=nav.querySelectorAll("button");btns.forEach(b=>b.disabled=true);
+async function finish(){gcev("finish-share","Tapped Finish & Share");const btns=nav.querySelectorAll("button");btns.forEach(b=>b.disabled=true);
  try{const z=await buildZip();const nm=`moschouris-site-walk-${new Date().toISOString().slice(0,10)}.zip`;const f=new File([z],nm,{type:"application/zip"});
   if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Moschouris site walk",text:"Site walk photos and notes"});return;}catch(e){if(e.name==="AbortError")return;}}
   const a=document.createElement("a");a.href=URL.createObjectURL(z);a.download=nm;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},4000);
