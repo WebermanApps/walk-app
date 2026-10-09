@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ethan's Site Walk</title>
+<title>Site Walk</title>
 <style>
 :root{--bg:#f5f5f7;--card:#fff;--ink:#1d1d1f;--mute:#6e6e73;--line:#d2d2d7;--blue:#0071e3;--fill:#f2f2f4}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -54,7 +54,7 @@ ul{padding-left:20px;margin:0}li{margin-bottom:12px}li::marker{color:var(--mute)
 .ck{margin:10px 0;font-weight:500}.ck+.check:not(.ck){margin-top:20px}.bring h2{font-size:24px;margin-bottom:10px}.bring li{margin-bottom:6px}
 .sum{font-size:15px;color:var(--mute);text-align:center;background:none;box-shadow:none;padding:10px 20px}.sum b{color:var(--ink)}
 </style></head><body>
-<header><h1 id="hd">Ethan's Site Walk</h1><div id="pb"><i></i></div></header>
+<header><h1 id="hd">Site Walk</h1><div id="pb"><i></i></div></header>
 <main id="m"></main>
 <div class="nav" id="nav"></div>
 <script>
@@ -81,7 +81,7 @@ async function counts(){const all=await allPhotos();const c={};all.forEach(p=>c[
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const m=document.getElementById("m"),nav=document.getElementById("nav"),hd=document.getElementById("hd");
 let urls=[];function freeUrls(){urls.forEach(u=>URL.revokeObjectURL(u));urls=[];}
-async function home(){S.pos=null;save();freeUrls();hd.textContent="Ethan's Site Walk";
+async function home(){S.pos=null;save();freeUrls();hd.textContent="Site Walk";
  const c=await counts();let tot=0,dn=0;
  let h=`<div class="card"><p>${esc(D.intro)}</p><button class="sec wide" onclick="before()">Before You Go</button></div><div class="card bring"><h2>What to Bring</h2><ul>${D.bring.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div><h2>Stops</h2>`;
  D.stops.forEach((s,a)=>{const n=s.items.length;let d=0,conf=0;s.items.forEach((x,b)=>{if(st(a,b).done)d++;if(x.conf)conf++;});tot+=n;dn+=d;
