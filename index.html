@@ -92,7 +92,26 @@ button,.btn{border-radius:0!important;font-family:Khand,Hind,sans-serif!importan
 input[type=text]:focus,textarea:focus{border-color:var(--mw-lagoon)!important}
 
 </style><!--/mw-polish-->
-</head><body>
+<style id="sw-niko">
+.sw-ringcard{display:flex;align-items:center;gap:14px}
+.sw-ringn{font:700 26px Khand,Hind,sans-serif;line-height:1;color:#171717}
+.sw-dot{width:14px;height:14px;border-radius:50%;border:2px solid #D4D4D4;flex:none;background:#fff}
+.sw-dot.on{background:#0B6E4F;border-color:#0B6E4F}.sw-dot.part{border-color:#0B6E4F;background:linear-gradient(90deg,#0B6E4F 50%,#fff 50%)}
+.sw-ckrow{display:flex;align-items:stretch;gap:10px;margin:20px 0}.sw-ckrow .check{flex:1;margin:0!important}
+.sw-slot{position:relative;width:72px;min-height:60px;flex:none;border:2px dashed #6B5E50;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#6B5E50;overflow:hidden;cursor:pointer;background:#fff}
+.sw-slot input{position:absolute;inset:0;opacity:0;cursor:pointer}.sw-slotin{display:flex}.sw-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sw-empty{display:flex;align-items:center;gap:10px;color:#525252;font-size:15px}
+.sw-cam{width:40px;height:40px;border-radius:50%;background:#F5F5F5;color:#737373;display:inline-flex;align-items:center;justify-content:center}
+.thumbs .sw-mk{position:absolute!important;left:4px!important;right:4px!important;bottom:4px!important;top:auto!important;width:auto!important;min-height:44px!important;height:44px;border-radius:999px!important;background:#ffffffe6!important;color:#171717!important;font-size:11px!important;line-height:44px!important;padding:0!important}
+.thumbs img{width:110px!important;height:110px!important}
+.sw-mkov{position:fixed;inset:0;z-index:300;background:#FFFDF7;display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))}
+.sw-mkbar{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}.sw-mkbar b{font:700 20px Khand,Hind,sans-serif}
+.sw-mkwrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}.sw-mkwrap canvas{max-width:100%;max-height:100%;touch-action:none;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.sw-mkbtns{display:flex;gap:8px;margin-top:10px}.sw-mkbtns button{flex:1;min-height:48px;white-space:nowrap;letter-spacing:.04em!important}
+.sw-donecard{text-align:center}.sw-next{text-align:left;padding-left:20px;margin:0}.sw-next li{margin:6px 0}
+.sw-draw{stroke-dasharray:60;stroke-dashoffset:60;animation:swdraw .9s ease-out .2s forwards}@keyframes swdraw{to{stroke-dashoffset:0}}
+.stop{gap:12px!important}
+</style></head><body>
 <header><h1 id="hd">Site Walk</h1><div id="pb"><i></i></div></header>
 <main id="m"></main>
 <div class="nav" id="nav"></div>
@@ -122,12 +141,12 @@ const m=document.getElementById("m"),nav=document.getElementById("nav"),hd=docum
 let urls=[];function freeUrls(){urls.forEach(u=>URL.revokeObjectURL(u));urls=[];}
 async function home(){S.pos=null;save();freeUrls();hd.textContent="Site Walk";
  const c=await counts();let tot=0,dn=0;
- let h=`<div class="card"><p>${esc(D.intro)}</p><div class="sample"><img src="${IM.aerial}" alt="The house from above"><div><b>The House From Above</b><br>Come in through the left garage, where the red arrow points.</div></div><button class="sec wide" onclick="before()">Before You Go</button></div><div class="card bring"><h2>What to Bring</h2><ul>${D.bring.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div><h2>Stops</h2>`;
+ let h=`<div class="card sw-ringcard" id="swring"></div><div class="card"><p>${esc(D.intro)}</p><div class="sample"><img src="${IM.aerial}" alt="The house from above"><div><b>The House From Above</b><br>Come in through the left garage, where the red arrow points.</div></div><button class="sec wide" onclick="before()">Before You Go</button></div><div class="card bring"><h2>What to Bring</h2><ul>${D.bring.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div><h2>Stops</h2>`;
  D.stops.forEach((s,a)=>{const n=s.items.length;let d=0,conf=0;s.items.forEach((x,b)=>{if(st(a,b).done)d++;if(x.conf)conf++;});tot+=n;dn+=d;
-  h+=`<button class="btn stop" onclick="go(${a},0)"><span class="t">${esc(s.title)}<br><span class="cnt">${d} of ${n} done${conf?` · <span class="conf">${conf} CONFIRM</span>`:""}</span><span class="bar"><i style="width:${100*d/n}%"></i></span></span><span>›</span></button>`;
+  h+=`<button class="btn stop" onclick="go(${a},0)"><span class="sw-dot ${d===n?"on":d?"part":""}" aria-label="${d===n?"Done":d?"In progress":"Not started"}"></span><span class="t">${esc(s.title)}<br><span class="cnt">${d} of ${n} done${conf?` · <span class="conf">${conf} CONFIRM</span>`:""}</span><span class="bar"><i style="width:${100*d/n}%"></i></span></span><span>›</span></button>`;
   if(a===EXA){const xd=exDone(),xn=E.checks.length;h+=`<button class="btn stop xrow" onclick="exitStep()"><span class="t"><span class="k">${esc(E.sub)}</span><br>${esc(E.title)}<br><span class="cnt">${xd} of ${xn} checked</span><span class="bar"><i style="width:${100*xd/xn}%"></i></span></span><span>›</span></button>`;}});
  h+=`<div class="card sum"><b>${dn} of ${tot} items done.</b> ${Object.values(c).reduce((a,b)=>a+b,0)} photos saved on this phone.</div>`;
- prog(dn/tot);m.innerHTML=h;nav.innerHTML=`<button class="grn" onclick="finish()">Finish &amp; Share</button>`;window.scrollTo(0,0);}
+ prog(dn/tot);m.innerHTML=h;swRing(dn,tot);nav.innerHTML=`<button class="grn" onclick="finish()">Finish &amp; Share</button>`;window.scrollTo(0,0);}
 function before(){hd.textContent="Before You Go";prog(0);m.innerHTML=`<div class="card bring"><h2>What to Bring</h2><ul>${D.bring.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div><div class="card"><h2>Before You Go</h2><ul>${D.before.map(b=>`<li>${esc(b).replace("CONFIRM",'<span class="conf">CONFIRM</span>')}</li>`).join("")}</ul></div>`;
  nav.innerHTML=`<button class="sec" onclick="home()">Home</button><button class="pri" onclick="go(0,0)">Start Stop 1</button>`;window.scrollTo(0,0);}
 async function gcev(p,t){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:p,title:t,event:true});}catch(e){}}
@@ -143,11 +162,11 @@ function go(a,b){if(b===0)gcev("stop-"+(a+1)+"-started","Stop "+(a+1)+" started"
  <label class="btn cam sec">Add From Photos<input type="file" accept="image/*" multiple id="f2"></label>
  <div class="thumbs" id="th"></div>
  ${(x.checks||[]).map((c,j)=>`<label class="check ck"><input type="checkbox" class="icx" data-j="${j}" ${(v.checks||[])[j]?"checked":""}> ${esc(c)}</label>`).join("")}
- <label class="check"><input type="checkbox" id="dn" ${v.done?"checked":""}> Done</label>
+ <div class="sw-ckrow"><label class="check"><input type="checkbox" id="dn" ${v.done?"checked":""}> Done</label><label class="sw-slot" id="slot" aria-label="Add a photo for this item"><span class="sw-slotin" id="slotin"></span><input type="file" accept="image/*" capture="environment" multiple id="f3"></label></div>
  ${x.serial!==false?`<label class="lbl" for="sn">Serial Number</label><input id="sn" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" value="${esc(v.serial||"")}">`:""}${x.filt?`<label class="lbl" for="fs">Filter Size</label><input id="fs" type="text" placeholder="Like 16x25x4" autocomplete="off" spellcheck="false" value="${esc(v.filter||"")}">`:""}<label class="lbl" for="nt">Notes</label><textarea id="nt">${esc(v.notes)}</textarea></div>`;
  m.innerHTML=h;window.scrollTo(0,0);
  const onf=async e=>{for(const f of e.target.files)await addPhoto(k,f);e.target.value="";thumbs(k);};
- document.getElementById("f").onchange=onf;document.getElementById("f2").onchange=onf;
+ document.getElementById("f").onchange=onf;document.getElementById("f2").onchange=onf;document.getElementById("f3").onchange=onf;
  document.getElementById("dn").onchange=e=>{v.done=e.target.checked;save();};
  document.getElementById("nt").oninput=e=>{v.notes=e.target.value;save();};const sn=document.getElementById("sn");if(sn)sn.oninput=e=>{v.serial=e.target.value;save();};
  m.querySelectorAll("input.icx").forEach(el=>el.onchange=e=>{v.checks=v.checks||[];v.checks[+e.target.dataset.j]=e.target.checked;save();});
@@ -155,8 +174,26 @@ function go(a,b){if(b===0)gcev("stop-"+(a+1)+"-started","Stop "+(a+1)+" started"
  nav.innerHTML=`<button class="sec" onclick="step(${i-1})">‹ Back</button><button class="sec" onclick="home()">Stops</button><button class="pri" onclick="step(${i+1})">${i+1<flow.length?"Next ›":"Finish"}</button>`;
  thumbs(k);}
 async function thumbs(k){const el=document.getElementById("th");if(!el)return;const ps=await photos(k);el.innerHTML="";
- ps.forEach(p=>{const u=URL.createObjectURL(p.blob);urls.push(u);const d=document.createElement("div");d.innerHTML=`<img src="${u}" alt="photo"><button aria-label="Delete photo">×</button>`;
-  d.querySelector("button").onclick=async()=>{if(confirm("Delete this photo?")){await delPhoto(p.id);thumbs(k);}};el.appendChild(d);});}
+ const si=document.getElementById("slotin");
+ if(!ps.length){el.innerHTML=`<div class="sw-empty"><span class="sw-cam" aria-hidden="true">${CAM}</span>No photo yet. Tap the camera to add one.</div>`;if(si)si.innerHTML=CAM;}
+ ps.forEach((p,j)=>{const u=URL.createObjectURL(p.blob);urls.push(u);if(j===ps.length-1&&si)si.innerHTML=`<img src="${u}" alt="Latest photo">`;const d=document.createElement("div");d.innerHTML=`<img src="${u}" alt="photo"><button aria-label="Delete photo">×</button><button class="sw-mk" aria-label="Draw on this photo">✎ Mark</button>`;
+  d.querySelector("button").onclick=async()=>{if(confirm("Delete this photo?")){await delPhoto(p.id);thumbs(k);}};d.querySelector(".sw-mk").onclick=()=>markup(p,k);el.appendChild(d);});}
+const CAM='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+function swRing(d,t){const el=document.getElementById("swring");if(!el)return;const f=t?d/t:0,C=2*Math.PI*26;
+ el.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#E5E5E5" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="#0B6E4F" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C*f} ${C}" transform="rotate(-90 32 32)"/></svg><div><div class="sw-ringn">${d} of ${t}</div><div class="cnt">items done across ${D.stops.length} stops</div></div>`;}
+/* Photo markup: draw on a copy of the photo, on the phone. The original stays; the marked copy is added as a new photo. */
+async function markup(p,k){const ov=document.createElement("div");ov.className="sw-mkov";ov.innerHTML=`<div class="sw-mkbar"><b>Draw On The Photo</b><span class="cnt">Your original stays. A marked copy is added.</span></div><div class="sw-mkwrap"><canvas></canvas></div><div class="sw-mkbtns"><button class="sec" data-a="undo">Undo</button><button class="sec" data-a="cancel">Cancel</button><button class="pri" data-a="save">Save Copy</button></div>`;
+ document.body.appendChild(ov);const cv=ov.querySelector("canvas"),wrap=ov.querySelector(".sw-mkwrap");
+ let bmp;try{bmp=await createImageBitmap(p.blob,{imageOrientation:"from-image"});}catch(e){bmp=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=URL.createObjectURL(p.blob);});}
+ const W=bmp.width,H=bmp.height,sc=Math.min((wrap.clientWidth||360)/W,(wrap.clientHeight||480)/H);cv.width=Math.round(W*sc);cv.height=Math.round(H*sc);const x=cv.getContext("2d");
+ const strokes=[];let cur=null;const lw=()=>Math.max(3,cv.width/90);
+ function draw(){x.drawImage(bmp,0,0,cv.width,cv.height);x.strokeStyle="#C1502E";x.lineCap="round";x.lineJoin="round";x.lineWidth=lw();strokes.forEach(s=>{x.beginPath();s.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.stroke();});}
+ draw();const pt=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height];};
+ cv.onpointerdown=e=>{cur=[pt(e)];strokes.push(cur);cv.setPointerCapture(e.pointerId);};cv.onpointermove=e=>{if(cur){cur.push(pt(e));draw();}};cv.onpointerup=cv.onpointercancel=()=>{cur=null;};
+ ov.querySelector('[data-a="undo"]').onclick=()=>{strokes.pop();draw();};ov.querySelector('[data-a="cancel"]').onclick=()=>ov.remove();
+ ov.querySelector('[data-a="save"]').onclick=async()=>{const c2=document.createElement("canvas");c2.width=W;c2.height=H;const y=c2.getContext("2d");y.drawImage(bmp,0,0);const f=W/cv.width;
+  y.strokeStyle="#C1502E";y.lineCap="round";y.lineJoin="round";y.lineWidth=lw()*f;strokes.forEach(s=>{y.beginPath();s.forEach((q,i)=>i?y.lineTo(q[0]*f,q[1]*f):y.moveTo(q[0]*f,q[1]*f));y.stroke();});
+  const b=await new Promise(ok=>c2.toBlob(ok,"image/jpeg",0.92));if(b)await addPhoto(k,b);ov.remove();thumbs(k);};}
 function house(ps){return (ps||[]).map(p=>`<div class="sample"><img src="${p.src||(HP.pool||[])[p.ref]}" alt="${p.title?esc(p.title):"In This House"}" data-house="1"><div>${p.title?`<b>${esc(p.title)}</b>`:`<b>In This House</b>`}${p.note?"<br>"+esc(p.note):""}</div></div>`).join("");}
 function prog(f){const e=document.querySelector("#pb i");if(e)e.style.width=(100*f)+"%";}
 function step(i){if(i<0)return home();if(i>=flow.length)return done();const p=flow[i];if(p==="exit")return exitStep();go(p[0],p[1]);}
@@ -167,7 +204,7 @@ function exitStep(){gcev("exit-checklist","Exit checklist opened");S.pos="exit";
  m.querySelectorAll(".xc").forEach(el=>el.onchange=e=>{S.ex.c[+e.target.dataset.j]=e.target.checked;save();});
  document.getElementById("xn").oninput=e=>{S.ex.notes=e.target.value;save();};
  nav.innerHTML=`<button class="sec" onclick="step(${XI-1})">‹ Back</button><button class="sec" onclick="home()">Stops</button><button class="pri" onclick="step(${XI+1})">Stop ${EXA+2} ›</button>`;}
-function done(){gcev("walk-done","Walk done screen");S.pos=null;save();hd.textContent="When You're Done";prog(1);m.innerHTML=`<div class="card"><h2>When You're Done</h2><ul>${D.done.map(d=>`<li>${esc(d)}</li>`).join("")}</ul><p>Tap <b>Finish &amp; Share</b> to send everything (photos and notes) in one zip file.</p></div>`;
+function done(){gcev("walk-done","Walk done screen");S.pos=null;save();hd.textContent="When You're Done";prog(1);m.innerHTML=`<div class="card sw-donecard"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="none" stroke="#0B6E4F" stroke-width="4"/><path class="sw-draw" d="M19 33 L28 42 L46 23" fill="none" stroke="#0B6E4F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><h2 style="margin:8px 0 6px">Walk Complete</h2><h3 style="font-size:18px;margin:14px 0 6px">What Happens Next</h3><ol class="sw-next"><li>Tap <b>Finish &amp; Share</b> to send Max one zip with your photos and notes.</li><li>Max goes through the photos and registers the warranties.</li><li>If anything is missing, Max will reach out.</li></ol></div><div class="card"><h2>When You're Done</h2><ul>${D.done.map(d=>`<li>${esc(d)}</li>`).join("")}</ul><p>Tap <b>Finish &amp; Share</b> to send everything (photos and notes) in one zip file.</p></div>`;
  nav.innerHTML=`<button class="sec" onclick="home()">Stops</button><button class="grn" onclick="finish()">Finish &amp; Share</button>`;window.scrollTo(0,0);}
 // zip (store, no compression)
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
@@ -198,4 +235,29 @@ async function finish(){gcev("finish-share","Tapped Finish & Share");const btns=
  }catch(e){alert("Could not build the zip: "+e.message);}finally{btns.forEach(b=>b.disabled=false);}}
 window.go=go;window.home=home;window.before=before;window.step=step;window.finish=finish;window.exitStep=exitStep;window.__test={buildZip,addPhoto,makeZip};
 openDB().then(()=>{if(S.pos==="exit")exitStep();else if(Array.isArray(S.pos)&&D.stops[S.pos[0]]&&D.stops[S.pos[0]].items[S.pos[1]])go(S.pos[0],S.pos[1]);else home();}).catch(e=>{m.innerHTML=`<div class="card">Photo storage is not available in this browser (${esc(e.message)}). Try Safari or Chrome, not private mode.</div>`;});
-</script></body></html>
+</script><!--mw-niko--><style id="mw-niko">
+/* Niko & Vivian apps (deck 2026-10-11b): wordmark left + Share right + thin rule; earthy outline buttons that fill on press */
+:root{--mw-jungle:#0B6E4F;--mw-earth:#6B5E50;--mw-terra:#C1502E;--mw-lagoon:#05668D}
+.mwbar{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:4px 0;border-bottom:1px solid #E5E5E5;margin:0 0 6px}
+.mwbar .wm{font:700 15px Khand,Hind,sans-serif;letter-spacing:.14em;color:#171717;text-transform:uppercase;white-space:nowrap}
+.mwbar img.logo{margin:0!important;max-height:22px;width:auto}
+.mwbar #mwShare{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;font:700 12px Khand,Hind,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;position:static!important;bottom:auto!important;right:auto!important;flex:none;border-radius:999px!important;border:2px solid var(--mw-earth)!important;color:var(--mw-earth)!important;background:#fff!important}
+.mwbar #mwShare:active{background:var(--mw-earth)!important;color:#fff!important}
+#mwShareMsg{top:60px!important;bottom:auto!important}
+/* earthy outline buttons, fill on press */
+.nav button,.nav .btn,button.pri,button.sec,.btn.pri,.btn.sec,label.btn.cam{border-radius:999px!important;background:#fff!important;font-family:Khand,Hind,sans-serif!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase}
+.nav button.pri,.nav .grn,button.pri,.btn.pri,button.grn{border:2px solid var(--mw-jungle)!important;color:var(--mw-jungle)!important}
+.nav button.sec,button.sec,.btn.sec,label.btn.cam{border:2px solid var(--mw-earth)!important;color:var(--mw-earth)!important}
+.nav button.pri:active,button.pri:active,button.grn:active,.btn.pri:active{background:var(--mw-jungle)!important;color:#fff!important}
+.nav button.sec:active,button.sec:active,.btn.sec:active,label.btn.cam:active{background:var(--mw-earth)!important;color:#fff!important}
+.nav button.pri:hover,.nav .grn:hover,button.pri:hover,button.grn:hover{background:#fff!important}
+.nav button.pri:active,.nav .grn:active{background:var(--mw-jungle)!important;color:#fff!important}
+</style>
+<script id="mw-niko-js">(function(){function bar(){var h=document.querySelector('header');if(!h||h.querySelector('.mwbar'))return;var b=document.createElement('div');b.className='mwbar';
+var logo=h.querySelector('img.logo');if(logo)b.appendChild(logo);else{var w=document.createElement('span');w.className='wm';w.textContent='Max Weberman';b.appendChild(w)}
+var s=document.getElementById('mwShare');if(!s){s=document.createElement('button');s.id='mwShare';s.type='button';s.setAttribute('aria-label','Share this app');s.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/></svg>Share';
+s.onclick=async function(){var url=location.href.split('#')[0],t=document.title;if(navigator.share){try{await navigator.share({title:t,url:url});return}catch(e){if(e&&e.name==='AbortError')return}}
+if(/iPhone|iPad|Android/i.test(navigator.userAgent)){location.href='sms:?&body='+encodeURIComponent(t+' '+url);return}try{await navigator.clipboard.writeText(url);s.lastChild.textContent='Copied';setTimeout(function(){s.lastChild.textContent='Share'},1600)}catch(e){prompt('Copy this link:',url)}}}
+b.appendChild(s);h.insertBefore(b,h.firstChild);document.documentElement.style.setProperty('--mw-share-offset','0px')}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bar);else bar();})();</script><!--/mw-niko-->
+</body></html>
