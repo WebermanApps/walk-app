@@ -53,7 +53,7 @@ ul{padding-left:20px;margin:0}li{margin-bottom:12px}li::marker{color:var(--mute)
 .wide{width:100%;margin-top:6px}
 .ck{margin:10px 0;font-weight:500}.ck+.check:not(.ck){margin-top:20px}.bring h2{font-size:24px;margin-bottom:10px}.bring li{margin-bottom:6px}
 .sum{font-size:15px;color:var(--mute);text-align:center;background:none;box-shadow:none;padding:10px 20px}.sum b{color:var(--ink)}
-</style><script data-goatcounter="https://weberman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</style><script>window.goatcounter={path:function(p){p=p||"/";if(p.indexOf("/walk-app/")===0)return p;return "/walk-app/"+p.replace(/^\/+/,"")}};</script><script data-goatcounter="https://weberman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head><body>
 <header><h1 id="hd">Site Walk</h1><div id="pb"><i></i></div></header>
 <main id="m"></main>
@@ -92,7 +92,7 @@ async function home(){S.pos=null;save();freeUrls();hd.textContent="Site Walk";
  prog(dn/tot);m.innerHTML=h;nav.innerHTML=`<button class="grn" onclick="finish()">Finish &amp; Share</button>`;window.scrollTo(0,0);}
 function before(){hd.textContent="Before You Go";prog(0);m.innerHTML=`<div class="card bring"><h2>What to Bring</h2><ul>${D.bring.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div><div class="card"><h2>Before You Go</h2><ul>${D.before.map(b=>`<li>${esc(b).replace("CONFIRM",'<span class="conf">CONFIRM</span>')}</li>`).join("")}</ul></div>`;
  nav.innerHTML=`<button class="sec" onclick="home()">Home</button><button class="pri" onclick="go(0,0)">Start Stop 1</button>`;window.scrollTo(0,0);}
-async function gcev(p,t){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:p,title:t,event:true});}catch(e){}}
+async function gcev(p,t){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:"/walk-app/"+String(p).replace(/^\/+/,"").replace(/^walk-app\//,""),title:t,event:true});}catch(e){}}
 function go(a,b){if(b===0)gcev("stop-"+(a+1)+"-started","Stop "+(a+1)+" started");S.pos=[a,b];save();freeUrls();const s=D.stops[a],x=s.items[b],k=id(a,b),v=st(a,b);hd.textContent=`Stop ${a+1} of ${D.stops.length}`;const i=fidx(a,b);prog((i+1)/flow.length);
  let h=(b==0&&s.note?`<div class="card">${esc(s.note)}${house(HP.stops[a+1])}</div>`:"")+(x.go?`<div class="card walk"><span class="ic" aria-hidden="true">↗</span><div><span class="lbl">Walk</span>${esc(x.go)}</div></div>`:"")+`<div class="card"><div class="cnt">Item ${x.n} of ${num.length} · ${b+1} of ${s.items.length} in this stop</div><h3>${x.n}. ${esc(x.name)}${x.conf?' <span class="conf">CONFIRM</span>':""}</h3>`;
  if(x.find)h+=`<p><span class="lbl">Where to Find It</span> ${esc(x.find)}</p>`;
